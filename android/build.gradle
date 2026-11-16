@@ -1,0 +1,5 @@
+plugins {
+    id 'com.android.application' version '8.5.2' apply false
+    // APK 内嵌 CPython（Chaquopy）：让手机自己能跑纯 Python 权威服务端
+    id 'com.chaquo.python' version '17.1.0' apply false
+}

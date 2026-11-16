@@ -1,0 +1,82 @@
+plugins {
+    id 'com.android.application'
+    id 'com.chaquo.python'
+}
+
+// 仓库根 = lan-shooter-v2（gradle 以 android/ 为项目目录）
+def repoRoot = file('../..').absolutePath
+
+android {
+    namespace 'com.reactionprotocol.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.reactionprotocol.app"
+        minSdk 24
+        targetSdk 34
+        versionCode 3
+        versionName "1.2"
+        // 内嵌 CPython：只保留真机常见 ABI，控制体积
+        ndk { abiFilters "arm64-v8a", "armeabi-v7a" }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+        }
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // assets：WebView 从 assets 根读 mobile.html；内嵌服务端从 assets/public、assets/data 解包
+    // python：Chaquopy 源码目录（server.py + game/ 由 Gradle 同步，避免源码双份漂移）
+    sourceSets {
+        main {
+            assets.srcDirs = ['src/main/assets', "$repoRoot/public", "$buildDir/generated/gameassets"]
+            python.srcDirs = ['src/main/python', "$buildDir/generated/python"]
+        }
+    }
+
+    lint {
+        abortOnError false
+    }
+
+    // 首启解包 assets 需要 BuildConfig.VERSION_CODE 做版本戳
+    buildFeatures {
+        buildConfig true
+    }
+}
+
+// 纯标准库服务端：不装任何 pip 包（默认 Python 版本即可，见构建日志）
+
+// 把仓库里的服务端源码与资源同步进构建目录（保持单一真源）
+task syncHostPython(type: Sync) {
+    from("$repoRoot/server.py")
+    from("$repoRoot/game") {
+        into "game"
+        exclude 'env.py', 'policy.py'   // 训练专用（policy.py 依赖 torch），服务端不引用
+    }
+    exclude '**/__pycache__/**'         // .pyc 无意义且可能盖上过期字节码
+    into "$buildDir/generated/python"
+}
+
+task syncHostAssets(type: Copy) {
+    from("$repoRoot/data") { into "data" }
+    from("$repoRoot/public") { into "public" }
+    into "$buildDir/generated/gameassets"
+}
+
+afterEvaluate {
+    preBuild.dependsOn syncHostPython, syncHostAssets
+    // 显式声明依赖，避免 Gradle 校验报 implicit dependency
+    tasks.matching { it.name.startsWith("merge") && it.name.endsWith("PythonSources") }
+            .configureEach { dependsOn syncHostPython }
+    tasks.matching { it.name.startsWith("merge") && it.name.endsWith("Assets") }
+            .configureEach { dependsOn syncHostAssets }
+}
