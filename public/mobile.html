@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Reaction Protocol · 手机版</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  /* ---------- 手机版开始界面（mobile.html 专用，不影响 PC 端 index.html） ---------- */
+  #start .panel {
+    width: min(560px, 92vw); max-height: 100%; box-sizing: border-box;
+    padding: 16px 20px; border-radius: 14px; text-align: center;
+    background: var(--panel); border: 1px solid var(--line);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+  }
+  #start .panel h1 { font-size: 28px; margin: 0 0 2px; letter-spacing: 0.06em; color: var(--ink); }
+  #start .panel .sub { font-size: 11.5px; color: var(--faint); margin: 0 0 10px; letter-spacing: 0.18em; }
+  #start .panel #nameInput {
+    width: 100%; box-sizing: border-box; padding: 9px 12px; margin-bottom: 10px;
+    font-family: var(--cjk); font-size: 14px; color: var(--ink);
+    background: rgba(0, 0, 0, 0.35); border: 1px solid var(--line); border-radius: 8px; outline: none;
+  }
+  #start .panel #nameInput:focus { border-color: rgba(57, 199, 216, 0.6); }
+  #start .panel .help { margin-top: 10px; font-size: 11px; line-height: 1.75; color: var(--faint); }
+  #start .panel .room-title { display: flex; justify-content: space-between; align-items: center; }
+
+  /* 横屏小屏（手机实测 768×362）：把控件压扁，保证“开战”按钮一定在首屏 */
+  @media (orientation: landscape) and (max-height: 480px) {
+    #start { padding: 6px; align-items: center; }
+    #start .panel { width: min(760px, 97vw); padding: 8px 14px; }
+    #start .panel h1 { font-size: 20px; }
+    #start .panel .sub { font-size: 10.5px; margin-bottom: 4px; }
+    #start .panel #nameInput { padding: 6px 10px; margin-bottom: 6px; font-size: 13px; }
+    #start .panel .teams { margin-bottom: 6px; }
+    #start .panel .teams span { padding: 4px 0; font-size: 11.5px; }
+    #start .panel .room { padding: 6px 8px; margin-bottom: 6px; }
+    #start .panel .room-row { gap: 6px; }
+    #start .panel .room-row select { padding: 3px 6px; font-size: 12px; }
+    #start .panel #joinBtn { padding: 8px 0; font-size: 14px; letter-spacing: 0.2em; }
+    #start .panel .help { display: none; }        /* 横屏优先露出按钮；操作说明在游戏内看 */
+    #chatInput { top: 8%; bottom: auto; width: min(420px, 70vw); }
+  }
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+
+<div id="start">
+  <div class="panel">
+    <h1>Reaction Protocol</h1>
+    <p class="sub">反应协议 · 手机版</p>
+    <input id="nameInput" maxlength="12" placeholder="输入你的名字" autocomplete="off">
+    <div class="teams">
+      <label><input type="radio" name="team" value="auto" checked><span>自动分配</span></label>
+      <label><input type="radio" name="team" value="red"><span class="red">红方</span></label>
+      <label><input type="radio" name="team" value="blue"><span class="blue">蓝方</span></label>
+    </div>
+    <div class="room">
+      <div class="room-title">房间设置 <span id="hostTag"></span></div>
+      <div class="room-row">
+        <label for="botCount">AI 数量</label>
+        <select id="botCount">
+          <option value="0">0（人人对战）</option>
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="4">4</option>
+          <option value="6">6</option>
+          <option value="8">8</option>
+        </select>
+        <label for="botDiff">AI 强度</label>
+        <select id="botDiff">
+          <option value="easy">简单</option>
+          <option value="normal" selected>普通</option>
+          <option value="hard">困难</option>
+        </select>
+      </div>
+    </div>
+    <button id="joinBtn">创建房间并开战</button>
+    <div class="guest-note">普通客户端：等房主创建房间后，点此加入对战</div>
+    <div class="help">
+      <b>左半屏拖动</b> 移动 · <b>右半屏拖动</b> 瞄准 · <b>开火键</b> 按住连发<br>
+      右侧圆键：换弹 / 烟雾 / 指示剂 / 开镜 · 底部武器条切枪 · 右上角战绩·聊天·管理
+    </div>
+    <div id="connTip"></div>
+  </div>
+</div>
+<input id="chatInput" maxlength="80" placeholder="输入消息，回车发送" autocomplete="off" enterkeyhint="send">
+
+<script>window.__MOBILE__ = true;</script>
+<script src="mobile_layout.js"></script>
+<script src="ui.js"></script>
+<script src="game.js"></script>
+<script src="tutorial.js"></script>
+<script src="mobile.js"></script>
+</body>
+</html>
