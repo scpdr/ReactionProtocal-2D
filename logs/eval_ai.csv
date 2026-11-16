@@ -1,0 +1,11 @@
+model,difficulty,winrate,sniper_frac,kills,deaths,episodes
+BC,easy,0.55,0.093,1.85,0.9,20
+BC,normal,0.4,0.158,1.9,1.6,20
+BC,hard,0.3,0.2,1.75,2.0,20
+DAgger,easy,0.55,0.093,1.85,0.9,20
+DAgger,normal,0.4,0.158,1.9,1.6,20
+DAgger,hard,0.3,0.2,1.75,2.0,20
+PPO,easy,0.4,0.066,1.55,0.85,20
+PPO,normal,0.45,0.112,2.0,1.35,20
+PPO,hard,0.45,0.128,1.95,1.6,20
+Random,normal,0.7,0.0,1.5,0.5,10

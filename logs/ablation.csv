@@ -1,0 +1,7 @@
+model,damage_mode,winrate,kills,deaths,fire_rate,switch_entropy,top_weapons,acid_hits,base_hits,oxidizing_hits,steps
+PPO,chem,0.4,2.0,1.4,0.22444444444444445,1.3800419946342113,rifle|shotgun,22,25,66,9000
+PPO,linear,0.4,1.7,2.0,0.22233333333333333,1.2807329452698175,rifle|shotgun,20,1,66,9000
+BC,chem,0.3,1.6,1.7,0.08744444444444445,1.3885458476009733,sniper|rifle,31,0,53,9000
+BC,linear,0.7,2.2,1.3,0.129,1.0790278746700108,rifle|sniper,43,0,55,9000
+Teacher,chem,1.0,3.4,1.2,0.14677777777777778,0.9840858535414702,rifle|shotgun,54,0,126,9000
+Teacher,linear,0.8,2.7,1.5,0.12977777777777777,0.8810261289721444,rifle|shotgun,51,0,81,9000
