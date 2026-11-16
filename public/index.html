@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Reaction Protocol</title>
+<script>
+  window.__errors = [];
+  window.addEventListener("error", function (e) {
+    window.__errors.push((e.message || "error") + " @" + (e.filename || "") + ":" + (e.lineno || 0));
+  });
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="cv"></canvas>
+
+<div id="start">
+  <div class="menu">
+    <!-- 左：品牌与规则 -->
+    <section class="brand">
+      <div class="eyebrow">REACTION PROTOCOL <span class="slash">/</span> 研创杯 · 创新成果类</div>
+      <h1>REACTION<br>PROTOCOL</h1>
+      <p class="tagline">把化学实验室变成战场</p>
+      <p class="lede">
+        你的生命值不是血量，而是 <b>体系 pH</b>；你的护甲不是钢板，而是 <b>缓冲容量</b>。
+        每一次命中，都是一次微量滴定。
+      </p>
+      <div class="stats">
+        <div><b>20</b><span>人同局实测</span></div>
+        <div><b>0</b><span>第三方依赖</span></div>
+        <div><b>30<em>Hz</em></b><span>权威服务端</span></div>
+      </div>
+      <div class="rules">
+        <div class="rule"><i class="dot acid"></i><span><b>酸 / 碱</b> 把 pH 推向极端</span></div>
+        <div class="rule"><i class="dot ox"></i><span><b>氧化</b> 直接剥离缓冲对，无视护甲</span></div>
+        <div class="rule"><i class="dot base"></i><span><b>缓冲环</b> 一旦耗尽，pH 断崖式下跌</span></div>
+      </div>
+    </section>
+
+    <!-- 右：实验参数 -->
+    <section class="setup">
+      <div class="setup-head">
+        <span class="setup-title">实验参数</span>
+        <span id="hostTag" class="host-tag"></span>
+      </div>
+
+      <label class="field">
+        <span>实验员代号</span>
+        <input id="nameInput" maxlength="12" placeholder="输入你的名字" autocomplete="off">
+      </label>
+
+      <div class="teams">
+        <label><input type="radio" name="team" value="auto" checked><span>自动分配</span></label>
+        <label><input type="radio" name="team" value="red"><span class="red">红方</span></label>
+        <label><input type="radio" name="team" value="blue"><span class="blue">蓝方</span></label>
+      </div>
+
+      <div class="room">
+        <div class="room-title">对局配置</div>
+        <div class="room-row">
+          <label for="botCount">AI 数量</label>
+          <select id="botCount">
+            <option value="0">0（人人对战）</option>
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="4">4</option>
+            <option value="6">6</option>
+            <option value="8">8</option>
+          </select>
+          <label for="botDiff">AI 强度</label>
+          <select id="botDiff">
+            <option value="easy">简单</option>
+            <option value="normal" selected>普通</option>
+            <option value="hard">困难</option>
+          </select>
+        </div>
+      </div>
+
+      <button id="joinBtn">进入实验</button>
+      <div class="guest-note">普通客户端：等房主创建对局后，点此加入</div>
+      <div id="connTip"></div>
+
+      <div class="keys">
+        <span><b>WASD</b> 移动</span><span><b>鼠标</b> 瞄准</span><span><b>左键</b> 试剂</span>
+        <span><b>1–8</b> 切换试剂</span><span><b>R</b> 换弹</span><span><b>E</b> 烟雾</span>
+        <span><b>F</b> 指示剂</span><span><b>N</b> 氟泄漏</span><span><b>H</b> 实验手册</span><span><b>Tab</b> 战绩</span>
+      </div>
+    </section>
+  </div>
+</div>
+
+<input id="chatInput" maxlength="80" placeholder="输入消息，Enter 发送" autocomplete="off">
+<script src="ui.js"></script>
+<script src="game.js"></script>
+<script src="tutorial.js"></script>
+</body>
+</html>
