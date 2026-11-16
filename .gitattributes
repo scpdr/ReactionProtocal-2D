@@ -1,0 +1,5 @@
+# 换行符策略：Linux 启动脚本必须 LF，Windows 批处理保持 CRLF
+# （否则在 Windows 上克隆后再打包，start.sh 会带 CRLF，到银河麒麟上会报
+#   "/usr/bin/env: ‘bash\r’: No such file or directory"）
+*.sh  text eol=lf
+*.bat text eol=crlf

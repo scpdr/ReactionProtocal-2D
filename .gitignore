@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+*.pyo
+*.log
+.pytest_cache/
+.venv/
+.venv-train/
+weights/*.tmp
+
+# 运行期状态（教程完成记录、封禁名单、战绩缓存），不进版本库
+save/
+tests/_tmp_*
+
+# 构建产物 / 训练检查点（可由 tools/ 重新生成，仓库只留源码与文本权重）
+dist/
+models/*.pt
+
+# 验收截图（体积大且可重跑；保留在本机 测试/ 目录）
+测试/**/*.png
