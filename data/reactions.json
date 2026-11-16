@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "note": "配平技能题库（P2，先留数据）。全部来自人教版必修/选择性必修。",
+  "equations": [
+    {
+      "id": "hcl_naoh",
+      "text": "HCl + NaOH = NaCl + H2O",
+      "left": ["HCl", "NaOH"],
+      "right": ["NaCl", "H2O"],
+      "answer": [1, 1, 1, 1],
+      "source": "选必1·第3章 中和滴定"
+    },
+    {
+      "id": "hac_naoh",
+      "text": "CH3COOH + NaOH = CH3COONa + H2O",
+      "left": ["CH3COOH", "NaOH"],
+      "right": ["CH3COONa", "H2O"],
+      "answer": [1, 1, 1, 1],
+      "source": "选必1·第3章 弱酸中和"
+    },
+    {
+      "id": "na_water",
+      "text": "Na + H2O = NaOH + H2",
+      "left": ["Na", "H2O"],
+      "right": ["NaOH", "H2"],
+      "answer": [2, 2, 2, 1],
+      "source": "必修一·第2章 钠"
+    },
+    {
+      "id": "aluminothermic",
+      "text": "Al + Fe2O3 = Fe + Al2O3",
+      "left": ["Al", "Fe2O3"],
+      "right": ["Fe", "Al2O3"],
+      "answer": [2, 1, 2, 1],
+      "source": "必修二·第8章 金属冶炼（铝热）"
+    },
+    {
+      "id": "h2o2_decomp",
+      "text": "H2O2 = H2O + O2",
+      "left": ["H2O2"],
+      "right": ["H2O", "O2"],
+      "answer": [2, 2, 1],
+      "source": "必修二·第6章 催化剂"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "note": "Reaction Protocol 试剂数值表 v1。依据《方案/调研/化学机制设计.md》§2.1。改数值只改本文件，不改代码。",
+  "old": {
+    "hp": 100,
+    "weapons": {
+      "knife": {"dmg": 55, "interval": 0.45},
+      "pistol": {"dmg": 26, "interval": 0.30},
+      "rifle": {"dmg": 22, "interval": 0.11},
+      "sniper": {"dmg": 150, "interval": 1.40},
+      "shotgun": {"dmg": 104, "interval": 0.95},
+      "lmg": {"dmg": 15, "interval": 0.085}
+    }
+  },
+  "weapons": [
+    {
+      "id": "knife", "slot": 1, "name": "玻璃搅拌棒", "reagent": "无（物理冲击）",
+      "channel": "physical", "per_shot_mmol": 55, "interval": 0.45,
+      "mag": 0, "range": 85, "old": "knife",
+      "note": "瞬时剥离缓冲对，不可被还原剂清除；2 击致死"
+    },
+    {
+      "id": "pistol", "slot": 2, "name": "硅酸喷枪", "reagent": "0.10 mol/L H2SiO3（硅酸）",
+      "channel": "acid", "per_shot_mmol": 13, "interval": 0.30,
+      "mag": 12, "range": 1800, "old": "pistol",
+      "note": "弱酸，精准点伤；4 发击穿满缓冲"
+    },
+    {
+      "id": "rifle", "slot": 3, "name": "盐酸喷枪", "reagent": "0.10 mol/L HCl",
+      "channel": "acid", "per_shot_mmol": 11, "interval": 0.11,
+      "mag": 30, "range": 2400, "old": "rifle",
+      "note": "主压制，5 发击穿满缓冲"
+    },
+    {
+      "id": "sniper", "slot": 4, "name": "高氯酸", "reagent": "0.20 mol/L HClO4（高氯酸）",
+      "channel": "acid", "per_shot_mmol": 75, "interval": 1.40,
+      "mag": 5, "range": 3000, "old": "sniper",
+      "note": "强酸且强氧化性；满缓冲一发即可酸中毒"
+    },
+    {
+      "id": "shotgun", "slot": 5, "name": "广谱喷淋器", "reagent": "3% H2O2",
+      "channel": "oxidizing", "per_shot_mmol": 104, "interval": 0.95,
+      "mag": 6, "range": 520, "old": "shotgun",
+      "note": "8 弹丸共 104 mmol 缓冲剥离；命中附加氧化应激（P1）"
+    },
+    {
+      "id": "lmg", "slot": 6, "name": "碱液连喷", "reagent": "0.10 mol/L NaOH",
+      "channel": "base", "per_shot_mmol": 7.5, "interval": 0.085,
+      "mag": 100, "range": 2600, "old": "lmg",
+      "note": "碱侧等效点更近死亡；持续压制"
+    },
+    {
+      "id": "limewater", "slot": 7, "name": "石灰水投掷瓶", "reagent": "饱和 Ca(OH)2",
+      "channel": "base", "per_shot_mmol": 30, "interval": 12.0,
+      "mag": 2, "range": 600, "old": null,
+      "note": "AOE r=80，可中和酸池（P1）"
+    },
+    {
+      "id": "vitc", "slot": 8, "name": "还原剂喷瓶", "reagent": "5% 维生素 C",
+      "channel": "reducing", "per_shot_mmol": 15, "interval": 0.80,
+      "mag": 3, "range": 900, "old": null,
+      "note": "清除氧化应激 + 返还 15 mmol D；对无氧化目标浪费且自身弱酸 +2 mmol"
+    }
+  ]
+}
