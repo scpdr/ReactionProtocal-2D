@@ -1,2 +1,109 @@
-# ReactionProtocal-2D
-A 2D chemistery LAN shooter game designed for easy chemical learning &amp; fun gaming without internet
+# Reaction Protocol · 2D 局域网对战（v3.3）
+
+> 首届“研创杯”参赛作品 · 北京市建华实验学校
+> 纯 Python 标准库服务端 + Canvas 客户端，零第三方依赖；一台电脑开服，同网段浏览器直接加入。
+
+## 快速开始
+
+```bash
+python server.py            # 默认 8765 端口，自动打开浏览器
+python server.py 8899 --bots 4 --no-browser
+```
+
+- 主机打开 `http://<本机局域网IP>:8765/`，其他设备浏览器输入同一地址即可加入（30Hz 快照 / 60Hz 服务端 tick）。
+- 手机端访问 `/mobile.html`（独立紧凑 HUD）。
+- 存档与封禁名单写在 `save/`（可用环境变量 `RP_SAVE_DIR` 改到启动器旁）。
+- `RP_EVENTS=0` 关闭随机事件；`--ai` 用训练策略权重（`data/ai_weights.json`）。
+
+## 操作
+
+| 键 | 作用 |
+| --- | --- |
+| WASD / 鼠标 | 移动 / 瞄准；左键开火 |
+| 1–9 / 滚轮 | 切换试剂（搅拌棒、硅酸、盐酸枪、高氯酸、喷淋器、NaOH 机枪、**碱式连狙**、石灰水、维C） |
+| R | 换弹（机枪 3.2s、碱式连狙 2.5s） |
+| E / 右键 | 烟雾弹（480×320 内选点） |
+| Q / AOE / F | 技能三件套（烟幕、范围伤害、指示剂标记） |
+| N | 氟泄漏（隐藏积分 ≥ 30000；**特殊事件期间禁用**） |
+| Tab / H / B / Enter | 战绩榜 / 实验手册 / 主机面板（仅主机）/ 聊天 |
+
+## v3.3（本版）新增
+
+### 1. 封禁（玩家 ID / 机器 IP 两种形式）
+- 服务端权威：`save/bans.json` = `{"names": [...], "ips": [...]}`；玩家 ID 不区分大小写，IP 精确匹配。
+- 主机面板每行玩家有 **封ID / 封IP / 踢** 三个按钮；封禁立即下发 `{t:"banned"}` 并延迟 0.8s 断开（保证提示先到）。
+- 被拒客户端整屏黑底 + “你已被封禁” + 封禁类型/目标/原因 + **社区公约**（文明 ID、政治正确、公平竞技、隐私、处罚说明、申诉）；重开浏览器不解除，只能由主机面板解封。
+- 服务端接口：`ban_check(name, ip)` / `ban_add` / `ban_remove` / `ban_snapshot`，`/status.json` 与快照均带 `bans`。
+
+### 2. Boss 战 AI 加强（液氮守卫）
+- 护盾 **2600**（原 1400）、`hp_mul=4.5`（护盾破后等效 4.5 倍缓冲）、移速 245、伤害 ×1.8、射速 ×0.60。
+- 决策 **0.03s**（原 0.08s）：两段索敌（先可见目标池、按 HVT/残血加权；全部不可见才退回最近目标）、**弹道预判提前量**（按目标速度 × 飞行时间 ×0.92，160px 内直锁身体）、按目标 pH/距离**自动换枪**（酸性目标用碱、碱性用酸、中性用氧化喷）。
+- **缓冲环境不计入伤害**：Boss 受到酸/碱时只改 pH（同向 ±0.30 漂移并被钳制），**只有反向中和、氧化/物理才真正剥离缓冲环**；纯“酸碱同向”打 Boss 显示 `IMMUNE`。
+- 道具更凶：烟雾 6.5s、AOE 11s、指示剂 8s 冷却，空弹瞬补。
+
+### 3. 小游戏派对事件（参考 MC 小游戏派对）
+- **烫手山芋 hot_potato**（26s）：3.8s 引信随机在某人手上，贴到 86px 内即传递（1.2s 传递冷却），超时在持有者脚下爆炸（本人 95 伤、半径 210 内敌人 70 伤），随后重新抽取。
+- **岩浆地板 lava_floor**（24s）：地图中央随机安全圈 r≈330，圈外每 0.5s 按 9 dps 剥离缓冲，圈内标记安全。
+- **抢椅子 musical_chairs**（30s）：中央 3 把椅子，62px 内最近者占用，每 2s +120 分，先到 600 分获胜并在事件结束时播报。
+- 客户端实时绘制：山芋引信环与倒计时、岩浆安全圈渐变、椅子占用高亮；事件类型走快照 `evt.kind="party"` + `evt.extra`。
+
+### 4. 机枪抖动 + 碱式连狙
+- NaOH 机枪连射累积后坐力：每发 +0.011 rad、上限 0.085、每秒衰减 0.055；开火角度随机偏移 ±60% 后坐力，子弹散布叠加后坐力，客户端准星抖动 + 轻微震屏。点射比长按稳定。
+- 新增 **碱式连狙 asniper**（7 号位，碱通道）：85 伤 / 0.62s / 5 发 / 2.5s 装填 / 2600 弹速，射速介于步枪与狙击之间，用来平衡酸系一家独大。
+
+### 5. 出生点缓冲地带（反堵家）
+- 每队出生矩形正上、正下各一条缓冲带（宽 = 出生宽 + 88，高 250）；敌方连续停留 **1.2s** 后每 0.4s 扣 6.4 缓冲（16 dps，走氧化通道、不计击杀积分）。
+- 客户端地图层绘制半透明斜纹 + 流动虚线，靠近显示“缓冲地带 / BUFFER”，进入敌方缓冲带弹出警告。
+
+### 6. 特殊事件期间禁用核弹
+- 事件进行中按 N 无效，服务端回 `{t:"nuke_block"}` 并提示“特殊事件进行中，氟泄漏被禁用”；快照 `nk_ok` 同步置 0；事件开始时若有核弹倒计时会被取消并广播。
+
+## 数值速查
+
+| 项 | 值 |
+| --- | --- |
+| 碱式连狙 | 85 伤 / 0.62s / mag 5 / reload 2.5s / spread .013 / 弹速 2600 |
+| 机枪后坐力 | +0.011/发，上限 0.085，衰减 0.055/s |
+| Boss | shield 2600 / hp_mul 4.5 / speed 245 / dmg ×1.8 / fire ×0.60 / think 0.03s |
+| 出生缓冲带 | 外扩 44、高 250、宽限 1.2s、16 dps（每 0.4s 结算） |
+| 烫手山芋 | 引信 3.8s、传递半径 86px、爆炸半径 210 |
+| 岩浆地板 | 安全圈 330、圈外 9 dps、24s |
+| 抢椅子 | 3 把椅、62px 占用、每 2s +120 分、600 分获胜 |
+
+## 目录
+
+```
+server.py          权威服务端（WebSocket、Game 循环、封禁、核弹、教程）
+game/              化学引擎 chem.py、随机事件 events.py、强化学习环境 env.py 等
+public/            index.html / game.js / ui.js / mobile.* / tutorial.js / maps.json
+data/              maps.json（3 张地图）、weapons.json、reactions.json、ai_weights.json
+tests/             化学/环境/AI/事件/LAN/HUD/手机布局等回归脚本（纯标准库 + Node）
+tools/             训练、评估、发布打包、CDP 探针
+方案/              各版本设计说明与验收记录
+```
+
+## 回归测试
+
+```bash
+python tests/test_chem.py            # 20 项
+python tests/test_env.py             # 2 项
+python tests/offline_board_check.py  # 12 项
+python tests/events_boss_check.py    # 39 项（含 Boss 双向对抗、派对事件）
+python tests/lan_client_check.py --host 127.0.0.1 --port 8765 --seconds 15   # 15 项
+node tests/mobile_layout_check.js    # 18 个尺寸
+node tests/hud_layout_check.js       # 29 项
+node tests/hud_runtime.js            # UI 运行时 smoke
+node tests/tutorial_check.js         # 120 项
+```
+
+> Windows 控制台为 GBK 时，跑 Python 用例前设 `PYTHONIOENCODING=utf-8`；服务端已对不可编码字符做 `errors="replace"` 兜底，不会因 banner 起不来。
+
+## 许可与使用协议
+
+- **代码**：GNU AGPL-3.0（强传染性开源许可）。可学习、修改、分发；分发修改版或通过网络提供服务时，须以同协议公开对应源码并保留署名。全文见 [LICENSE](LICENSE)。
+- **名称与标识**：“Reaction Protocol”、学校与“研创杯”名称/标识不随代码授权，修改版须改名并注明来源。
+- **地图/文案/音效等非代码内容**：CC BY-NC-SA 4.0，禁止商业使用。
+- **发布包**：静态加密只为防直接拷走，不限制 AGPL 权利；源码始终可从本仓库获取。
+- 完整条款（含社区公约、隐私、免责与申诉）：[使用协议.md](使用协议.md)。
+
+> 选 AGPL 而不是 MIT 的原因：MIT 允许他人闭源换皮、商用且无需回馈；AGPL 要求修改版与网络服务同样开源，既保留学习自由，又防止课题成果被直接冒名或闭源变现。
